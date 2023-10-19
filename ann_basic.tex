@@ -1,0 +1,137 @@
+\documentclass[border = 0.2cm]{standalone}
+\usepackage{tikz}
+
+\begin {document}
+% Input layer neurons number
+\newcommand{\inputnum}{2} 
+% Hidden layer neurons number
+\newcommand{\hiddennum}{7}  
+% Output layer neurons number
+\newcommand{\outputnum}{3}
+% Hidden layer number
+\newcommand{\layernum}{6}
+% Separation between neurons
+\newcommand{\yoffset}{1.5}
+% Separation between layers
+\newcommand{\xoffset}{1.5}
+% Show bias node (0 or 1)
+\newcommand{\showbias}{1}
+% Center neurons counting the bias node (0 or 1)
+\newcommand{\countbias}{0}
+% Show name of the layer (0 or 1)
+\newcommand{\shownamelayer}{0}
+
+\begin{tikzpicture}
+	\ifnum \shownamelayer=1
+		\node[
+			align=center,
+			yshift=(\hiddennum-\inputnum)*5*\yoffset mm,
+		] (Text-Input) at (0*\xoffset,1*\yoffset+\showbias-1) {Capa de\\entrada};
+		\foreach \i in {1,...,\layernum}{
+			\node[
+				align=center,
+				yshift=(\hiddennum-\inputnum)*5*\yoffset mm,
+			] (Text-Hidden) at (2.5*\i*\xoffset,1*\yoffset+\showbias-1) {Capa\\oculta};
+		}
+		\node[
+			align=center,
+			yshift=(\hiddennum-\inputnum)*5*\yoffset mm,
+		] (Text-Output) at (2.5*\xoffset+2.5*\layernum*\xoffset,1*\yoffset+\showbias-1) {Capa de\\salida};
+	\fi
+
+	% Input Layer
+	\ifnum \showbias=1
+		\node[rectangle,
+			draw=orange,
+			minimum size = 6mm,
+			fill=orange!10] (Input-0) at (0*\xoffset,0*\yoffset) {$b$};
+	\fi
+	\foreach \i in {1,...,\inputnum}{
+		\node[circle,
+			draw=orange,
+			minimum size = 6mm,
+			fill=orange!10
+		] (Input-\i) at (0*\xoffset,-\i*\yoffset) {};
+	}
+
+	% Hidden Layer
+	\foreach \i in {1,...,\layernum}{
+		\ifnum \showbias=1
+			\node[rectangle,
+				draw=teal,
+				minimum size = 6mm,
+				fill=teal!10,
+				yshift=(\hiddennum-\inputnum)*5*\yoffset mm
+				] (Hidden-\i-0) at (2.5*\i*\xoffset,0*\yoffset) {$b$};
+		\fi
+		\foreach \j in {1,...,\hiddennum}{
+			\node[circle, 
+				draw=teal,
+				minimum size = 6mm,
+				fill=teal!10,
+				yshift=(\hiddennum-\inputnum)*5*\yoffset mm
+			] (Hidden-\i-\j) at (2.5*\i*\xoffset,-\j*\yoffset) {$B^\i_{\j}$};
+		}
+	}
+
+	% Output Layer
+	\foreach \i in {1,...,\outputnum}{
+		\node[circle, 
+			draw=purple,
+			minimum size = 6mm,
+			fill=purple!10,
+			yshift=(\outputnum-\inputnum+\countbias)*5*\yoffset mm
+		] (Output-\i) at (2.5*\xoffset+2.5*\xoffset*\layernum,-\i*\yoffset) {$o_{\i}$};
+	}
+
+	% Connect neurons In-Hidden
+	\ifnum \showbias=1
+		\foreach \i in {1,...,\hiddennum}{
+			\draw[->, shorten >=1pt, draw=black!40] (Input-0) -- (Hidden-1-\i);
+		}
+	\fi
+	\foreach \i in {1,...,\inputnum}{
+		\foreach \j in {1,...,\hiddennum}{
+			\draw[->, shorten >=1pt] (Input-\i) -- (Hidden-1-\j);	
+		}
+	}
+
+	% Connect neurons Hidden-Hidden
+	\pgfmathsetmacro{\layernm}{\layernum-1}
+	\foreach \i [evaluate=\i as \m using int(\i+1)] in {1,...,\layernm}{
+		\ifnum \showbias=1
+			\foreach \j in {1,...,\hiddennum}{
+				\draw[->, shorten >=1pt, draw=black!40] (Hidden-\i-0) -- (Hidden-\m-\j);
+			}
+		\fi
+		\foreach \k in {1,...,\hiddennum}{
+			\foreach \l in {1,...,\hiddennum}{
+				\draw[->, shorten >=1pt] (Hidden-\i-\k) -- (Hidden-\m-\l);
+			}
+		}
+	}
+
+	% Connect neurons Hidden-Out
+	\ifnum \showbias=1
+		\foreach \j in {1,...,\outputnum}{
+			\draw[->, shorten >=1pt, draw=black!40] (Hidden-\layernum-0) -- (Output-\j);
+		}
+	\fi
+	\foreach \i in {1,...,\hiddennum}{
+		\foreach \j in {1,...,\outputnum}{
+			\draw[->, shorten >=1pt] (Hidden-\layernum-\i) -- (Output-\j);
+		}
+	}
+
+	% Inputs
+	\foreach \i in {1,...,\inputnum}{            
+		\draw[<-, shorten >=1pt] (Input-\i) -- ++(-1,0) node[left]{$x_{\i}$};
+	}
+
+	% Outputs
+	\foreach \i in {1,...,\outputnum}{            
+		\draw[->, shorten >=1pt] (Output-\i) -- ++(1,0) node[right]{$y_{\i}$};
+	}
+
+\end{tikzpicture}
+\end{document}

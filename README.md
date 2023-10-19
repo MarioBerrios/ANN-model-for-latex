@@ -11,3 +11,4 @@ This repository contains the code needed to create a Artificial Neural Network (
 - \shownamelayer: show the name of each layer. (WIP: use the language given, right now the default is spanish, but you can change it on the code)
 
 An examplo of an output would be something like this
+![ANN example](https://github.com/MarioBerrios/ANN-model-for-latex/blob/main/ann_example.png)

@@ -12,7 +12,7 @@ This repository contains the code needed to create a Artificial Neural Network (
 
 Two example of an output would be something like this
 ![ANN example 1](https://github.com/MarioBerrios/ANN-model-for-latex/blob/main/ann_example.png)
-![ANN example 2](https://github.com/MarioBerrios/ANN-model-for-latex/blob/main/ann_example-1.png)
+![ANN example 2](https://github.com/MarioBerrios/ANN-model-for-latex/blob/main/ann_basic-1.png)
 
 ### References
 [Drawing Neural Networks in TikZ: Short Guide](https://latexdraw.com/drawing-neural-networks-in-tikz-short-guide/)

@@ -4,12 +4,12 @@
 \begin {document}
 % Input layer neurons number
 \newcommand{\inputnum}{2} 
-% Hidden layer neurons number
-\newcommand{\hiddennum}{7}  
 % Output layer neurons number
 \newcommand{\outputnum}{3}
+% Hidden layer neurons number by layer
+\def\hiddennumarr{{5,3,7}}
 % Hidden layer number
-\newcommand{\layernum}{6}
+\newcommand{\layernum}{3}
 % Separation between neurons
 \newcommand{\yoffset}{1.5}
 % Separation between layers
@@ -56,6 +56,7 @@
 
 	% Hidden Layer
 	\foreach \i in {1,...,\layernum}{
+        \pgfmathsetmacro{\hiddennum}{\hiddennumarr[\i-1]}
 		\ifnum \showbias=1
 			\node[rectangle,
 				draw=teal,
@@ -85,6 +86,7 @@
 	}
 
 	% Connect neurons In-Hidden
+	\pgfmathsetmacro{\hiddennum}{\hiddennumarr[0]}
 	\ifnum \showbias=1
 		\foreach \i in {1,...,\hiddennum}{
 			\draw[->, shorten >=1pt, draw=black!40] (Input-0) -- (Hidden-1-\i);
@@ -99,13 +101,16 @@
 	% Connect neurons Hidden-Hidden
 	\pgfmathsetmacro{\layernm}{\layernum-1}
 	\foreach \i [evaluate=\i as \m using int(\i+1)] in {1,...,\layernm}{
+		\pgfmathsetmacro{\hiddennumnext}{\hiddennumarr[\i]}
 		\ifnum \showbias=1
-			\foreach \j in {1,...,\hiddennum}{
-				\draw[->, shorten >=1pt, draw=black!40] (Hidden-\i-0) -- (Hidden-\m-\j);
+			\foreach \l in {1,...,\hiddennumnext}{
+				\draw[->, shorten >=1pt, draw=black!40] (Hidden-\i-0) -- (Hidden-\m-\l);
 			}
 		\fi
-		\foreach \k in {1,...,\hiddennum}{
-			\foreach \l in {1,...,\hiddennum}{
+		\pgfmathsetmacro{\hiddennumprev}{\hiddennumarr[\i-1]}
+		\pgfmathsetmacro{\hiddennumnext}{\hiddennumarr[\i]}
+		\foreach \k in {1,...,\hiddennumprev}{
+			\foreach \l in {1,...,\hiddennumnext}{
 				\draw[->, shorten >=1pt] (Hidden-\i-\k) -- (Hidden-\m-\l);
 			}
 		}
@@ -117,6 +122,7 @@
 			\draw[->, shorten >=1pt, draw=black!40] (Hidden-\layernum-0) -- (Output-\j);
 		}
 	\fi
+	\pgfmathsetmacro{\hiddennum}{\hiddennumarr[\layernum-1]}
 	\foreach \i in {1,...,\hiddennum}{
 		\foreach \j in {1,...,\outputnum}{
 			\draw[->, shorten >=1pt] (Hidden-\layernum-\i) -- (Output-\j);
